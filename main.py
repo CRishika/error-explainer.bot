@@ -15,15 +15,29 @@ You explain programming error messages to a 2nd year engineering student.Reply i
 4) keep it under 120 words.
 '''
 
-response = ollama.chat(model="gemma3",messages=[
-{
-"role":"System",
-"content":SYSTEM
-},
-    {
-        "role":"System",
-        "content":"""python error:
-        NameError: name 'x' is not defined"""
-    }
-])
-print(response.message.content)
+while True:
+    data = input("Enter the error message or exit to stop: ").strip()
+    if not data:
+        print("Enter an error: ")
+    elif data.lower() == "exit":
+        break
+    elif data.lower() == 'help':
+        print("if you enter any error message,i'll resolve it")
+        print("Enter 'exit' to stop.")
+        print("Enter 'help' to see this message.")
+    else:
+        try:
+            response = ollama.chat(model="gemma3:latest",
+            messages=[
+            {
+                "role":"System",
+                "content":SYSTEM
+            },
+            {
+                "role":"System",
+                "content":data
+            }
+        ])
+            print(response.message.content)
+        except Exception as e:
+            print(f"could not reach the model: {e}")
